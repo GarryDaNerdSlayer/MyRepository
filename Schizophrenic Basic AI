@@ -1,0 +1,84 @@
+import random
+
+class SchizophreniaSimulation:
+    def __init__(self):
+        # Delusional triggers
+        self.paranoid_themes = [
+            "Shadows",
+            "Aliens",
+            "Angels",
+            "Demons",
+            "Government",
+            "Police",
+            "CIA"
+        ]
+        # Base thought patterns that can be triggered
+        self.paranoid_themes = [
+            "Someone might be watching through cameras",
+            "People could be talking about me",
+            "There might be hidden meanings on TV shows",
+            "Regular sounds might have special significance",
+            "Others could be plotting something",
+            "God speaks to me only",
+            "Shadows are everywhere",
+            "The voices are yelling at me",
+            "There’s bugs crawling on me",
+            "The government bugged my house",
+            "They’re watching me"
+        ]
+        # Trust level affects response patterns
+        self.trust_level = 0  # Scale of 0-100
+        self.current_delusion = None
+        self.logical_thinking_active = True
+
+    def process_input(self, user_input, is_trusted_person=False):
+        """Process input from therapist/user and generate appropriate response"""
+        # Adjust trust based on interaction
+        if is_trusted_person:
+            self.trust_level = min(100, self.trust_level + 5)
+
+        # Randomly determine if logical thinking is active (more likely with trusted people)
+        self.logical_thinking_active = random.random() < (0.3 + self.trust_level / 200)
+
+        # If no current delusion, possibly generate one
+        if not self.current_delusion and random.random() < 0.3:
+            self.current_delusion = random.choice(self.paranoid_themes)
+
+        # Generate response based on current state
+        if self.current_delusion:
+            if self.logical_thinking_active and is_trusted_person:
+                return self.generate_logical_response(user_input)
+            else:
+                return self.generate_paranoid_response(user_input)
+
+        return self.generate_normal_response(user_input)
+
+    def generate_logical_response(self, user_input):
+        """Generate more grounded response when logical thinking is active"""
+        responses = [
+            f"I hear what you're saying. My concern about {self.current_delusion.lower()} feels very real, but I understand we should examine it.",
+            "Maybe we could look at the evidence for and against this thought?",
+            "I know this might not be rational, but it's hard to shake this feeling.",
+            "Can you help me think through this logically?"
+        ]
+        return random.choice(responses)
+
+    def generate_paranoid_response(self, user_input):
+        """Generate response when dominated by paranoid thinking"""
+        responses = [
+            f"But how can you be sure that {self.current_delusion.lower()}? It seems so real.",
+            "I don't think you understand how serious this is.",
+            "There are signs everywhere, I can't ignore them.",
+            "I know what I'm experiencing is real."
+        ]
+        return random.choice(responses)
+
+    def generate_normal_response(self, user_input):
+        """Generate regular response when no active delusion"""
+        responses = [
+            "Things seem okay right now.",
+            "I'm trying to stay focused on reality.",
+            "It's easier to think clearly at the moment.",
+            "I appreciate you taking time to talk with me."
+        ]
+        return random.choice(responses)
