@@ -82,3 +82,4 @@ class SchizophreniaSimulation:
             "I appreciate you taking time to talk with me."
         ]
         return random.choice(responses)
+git_publish
